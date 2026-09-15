@@ -3,8 +3,8 @@ set.seed(3131)
 
 # Parameters
 true_rate <- 0.05 # True lambda
-n <- 200 
-target_pc <- 0.1 # CHANGE TO 0, 0.1, 0.5
+n <- 2000 
+target_pc <- 0.5 # CHANGE TO 0, 0.1, 0.5
 R <- 2000
 
 # Estimators
@@ -22,10 +22,13 @@ obj_fn <- function(c_max) {
 C_sim_fit <- uniroot(obj_fn, interval = c(1, 2000))
 # ! End of AI Generated code !
 
-# Mean Y
+# Sets
 mean_Y <- numeric(R)
+mle_est   <- numeric(R)
+cens_prop <- numeric(R)
 
-for (r in 1:R) {
+
+for (i in 1:R) {
   # Times 
   T_i <- rexp(n, rate=true_rate)
   
@@ -36,8 +39,17 @@ for (r in 1:R) {
   Y <- pmin(T_i, C)
   
   # Mean Y calculation for Naive est
-  mean_Y[r] <- sum(Y) / n
+  mean_Y[i] <- sum(Y) / n
   
+  # Delta calculation
+  delta <- as.integer(T_i <= C)
+  
+  # Lamda_mle
+  r <- sum(delta)
+  mle_est[i] <- r / sum(Y)
+  
+  # average censoring proportion (observed across replicates)
+  cens_prop[i] <- 1 - mean(delta)
 }
 
 naive_est <- 1 / mean_Y
