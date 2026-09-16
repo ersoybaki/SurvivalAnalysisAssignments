@@ -49,6 +49,12 @@ cens_prop_x <- numeric(R)
 naive_est <- numeric(3)
 mle_est <- numeric(3)
 cens_prop <- numeric(3)
+# Bias set
+naive_bias <- numeric(3)
+mle_bias   <- numeric(3)
+#Variance set
+naive_var <- numeric(3)
+mle_var   <- numeric(3)
 
 # To store MSE calculations
 naive_est_mse <- numeric(3) 
@@ -95,6 +101,14 @@ for (c_max in c_max_roots) {
   naive_est[count] <- mean(1 / mean_Y)
   mle_est[count] <- mean(mle_est_x, na.rm = TRUE)
   
+  #Bias
+  naive_bias[count] <- naive_est[count] - true_rate
+  mle_bias[count]   <- mle_est[count]   - true_rate
+  
+  # Variance
+  naive_var[count] <- var(1 / mean_Y)
+  mle_var[count]   <- var(mle_est_x, na.rm = TRUE)
+  
   # MSE Calculations
   naive_est_mse[count] <- mean(((1 / mean_Y) - true_rate)^2)
   mle_est_mse[count] <- mean((mle_est_x - true_rate)^2, na.rm = TRUE)
@@ -108,6 +122,6 @@ for (c_max in c_max_roots) {
 
 # Print the findings as a Data Frame
 data.frame(pc_target = c(0, 0.1, 0.5), c_max = c_max_roots,
-           cens_prop, naive_est, mle_est, naive_est_mse, mle_est_mse)
+           cens_prop, naive_est, mle_est, naive_est_mse, mle_est_mse, naive_bias, mle_bias, naive_var, mle_var)
 
 
