@@ -43,6 +43,9 @@ mean_Y <- numeric(R)
 mle_est_x   <- numeric(R)
 cens_prop_x <- numeric(R)
 
+r0_x <- logical(R)
+prop_r0 <- numeric(3)
+
 # For p_c = 0, 0.1, 0.5 creating variables
 
 # To store estimations and censoring proportion
@@ -86,11 +89,14 @@ for (c_max in c_max_roots) {
     
     # Lamda_mle
     r <- sum(delta)
+    r0_x[i] <- (r==0)
     if (r == 0 ) {
       mle_est_x[i] <- NA
     } else {
       mle_est_x[i] <- r / sum(Y)
     }
+    
+    
     
     
     # average censoring proportion (observed across replicates)
@@ -115,6 +121,8 @@ for (c_max in c_max_roots) {
   
   # Censoring proportion
   cens_prop[count] <- mean(cens_prop_x)
+  prop_r0[count] <- mean(r0_x)
+  
   
   count <- count + 1
   
@@ -122,7 +130,7 @@ for (c_max in c_max_roots) {
 
 # Print the findings as a Data Frame
 out <- data.frame(pc_target = c(0, 0.1, 0.5), c_max = c_max_roots,
-           cens_prop, naive_est, mle_est, naive_est_mse, mle_est_mse, naive_bias, mle_bias, naive_var, mle_var)
+           cens_prop, naive_est, mle_est, naive_est_mse, mle_est_mse, naive_bias, mle_bias, naive_var, mle_var, prop_r0)
 
 print(out)
 
