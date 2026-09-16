@@ -121,7 +121,10 @@ for (c_max in c_max_roots) {
 }
 
 # Print the findings as a Data Frame
-data.frame(pc_target = c(0, 0.1, 0.5), c_max = c_max_roots,
+out <- data.frame(pc_target = c(0, 0.1, 0.5), c_max = c_max_roots,
            cens_prop, naive_est, mle_est, naive_est_mse, mle_est_mse, naive_bias, mle_bias, naive_var, mle_var)
 
+print(out)
 
+# Save Data Frame
+write.csv(out, "output.csv", row.names = FALSE)
